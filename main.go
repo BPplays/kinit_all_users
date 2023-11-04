@@ -37,7 +37,7 @@ func get_user_from_id(id string) (user.User, error) {
 
 
 func chown_r (file string, username string, group string) {
-	cmd := exec.Command("chown", fmt.Sprintf("%s:%s", username, username), "-R", file)
+	cmd := exec.Command("chown", fmt.Sprintf("%s:%s", username, group), "-R", file)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
