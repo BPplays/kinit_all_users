@@ -58,9 +58,9 @@ func chmod_r (file string, perms string) {
 
 	err := cmd.Run()
 	if err != nil {
-		log.Println("Error running chown for", file, ":", err)
+		log.Println("Error running chmod for", file, ":", err)
 	} else {
-		log.Println("chowned", file)
+		log.Println("chmoded", file)
 	}
 }
 
