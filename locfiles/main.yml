@@ -1,0 +1,36 @@
+repos:
+  test:
+    name: test
+    loc: C:\testrepo
+
+  # 鈴子's Vault:
+  #   name: 鈴子's Vault
+  #   loc: C:\Users\suzuko\Notes\Obsidian\鈴子's Vault\鈴子's Vault
+  
+  # yuzu:
+  #   name: yuzu
+  #   loc: C:\Users\suzuko\AppData\Roaming\yuzu
+  #   cron: "*/5 * * * *"
+
+  # ArmoredCore6:
+  #   name: ArmoredCore6
+  #   loc: C:\Users\suzuko\AppData\Roaming\ArmoredCore6
+  #   cron: "*/5 * * * *"
+  
+  # dolphin-dev:
+  #   name: dolphin-dev
+  #   loc: C:\Users\suzuko\scoop\persist\dolphin-dev\User
+
+  # TavernAI_public:
+  #   name: TavernAI public
+  #   loc: C:\Users\suzuko\Programs\ai\text\TavernAI\public
+
+  # elden ring save:
+  #   name: elden ring save
+  #   loc: C:\Users\suzuko\AppData\Roaming\EldenRing
+  #   cron: "*/5 * * * *"
+
+  # persona 5 r save:
+  #   name: persona 5 r save
+  #   loc: C:\Users\suzuko\AppData\Roaming\Sega\P5R
+  #   cron: "*/5 * * * *"

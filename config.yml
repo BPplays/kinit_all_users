@@ -1,0 +1,4 @@
+settings:
+  default cron time: "*/15 * * * *"
+  run on start: true
+  logfile max length (lines): 1000
