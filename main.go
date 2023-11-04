@@ -50,6 +50,20 @@ func chown_r (file string, username string, group string) {
 	}
 }
 
+func chmod_r (file string, perms string) {
+	cmd := exec.Command("chmod", perms, "-R", file)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		log.Println("Error running chown for", file, ":", err)
+	} else {
+		log.Println("chowned", file)
+	}
+}
+
 
 
 func main() {
@@ -74,6 +88,8 @@ func main() {
 					filename := file.Name()
 	
 					chown_r(dirPath, filename, filename)
+
+					chmod_r(dirPath, "700")
 
 					cmd := exec.Command("sudo", "-u", filename, "kinit", fmt.Sprintf("%s@SUZUKO.ORG", filename), "-k", "-t", keytabFile)
 					cmd.Stdin = os.Stdin
