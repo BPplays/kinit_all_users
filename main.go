@@ -5,35 +5,9 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"os/user"
 	"path/filepath"
-	"strings"
 	"time"
 )
-
-
-func get_user_from_id(id string) (user.User, error) {
-	// get the filesystem type of the folder
-	getent_out, err := exec.Command("getent", "passwd", id).Output()
-	if err != nil {
-		return user.User{}, err
-	}
-
-	passwd := strings.Split(string(getent_out), ":")
-	gecos := strings.Split(passwd[4], ",")
-	// log.Println(len(passwd))
-	// log.Println(len(gecos))
-
-	username := passwd[0]
-	uid := passwd[2]
-	gid := passwd[3]
-
-	real_name := gecos[0]
-
-	home_dir := passwd[5]
-	// compare the filesystem type with "nfs"
-	return user.User{uid, gid, username, real_name, home_dir}, nil
-}
 
 
 func chown_r (file string, username string, group string) {
