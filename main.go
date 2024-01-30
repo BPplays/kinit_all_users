@@ -24,6 +24,20 @@ func chown_r (file string, username string, group string) {
 	}
 }
 
+func k_dest (user string) {
+	cmd := exec.Command("sudo", "-u", user, "kdestroy", "-A")
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		log.Println("Error running kdestroy for", user, ":", err)
+	} else {
+		log.Println("kdestroy:", user)
+	}
+}
+
 func chmod_r (file string, perms string) {
 	cmd := exec.Command("chmod", perms, "-R", file)
 	cmd.Stdin = os.Stdin
@@ -41,7 +55,9 @@ func chmod_r (file string, perms string) {
 
 
 func main() {
+	bad_msg := "kinit: Failed to store credentials: Internal credentials cache error while getting initial credentials"
 	keytabs_dir := "/var/keytabs"
+	var loops int64
 
 	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
 
@@ -59,22 +75,34 @@ func main() {
 				keytabFile := filepath.Join(dirPath, file.Name()+".keytab")
 	
 				if _, err := os.Stat(keytabFile); err == nil {
-					filename := file.Name()
-	
-					chown_r(dirPath, filename, filename)
+					loops = 0
+					for {
+						if loops > 5 {
+							break
+						}
 
-					chmod_r(dirPath, "700")
+						filename := file.Name()
+		
+						chown_r(dirPath, filename, filename)
 
-					cmd := exec.Command("sudo", "-u", filename, "kinit", fmt.Sprintf("%s@SUZUKO.ORG", filename), "-k", "-t", keytabFile)
-					cmd.Stdin = os.Stdin
-					cmd.Stdout = os.Stdout
-					cmd.Stderr = os.Stderr
-	
-					err := cmd.Run()
-					if err != nil {
-						log.Println("Error running kinit for", filename, ":", err)
-					} else {
-						log.Println("Ran kinit for", filename)
+						chmod_r(dirPath, "700")
+
+						cmd := exec.Command("sudo", "-u", filename, "kinit", fmt.Sprintf("%s@SUZUKO.ORG", filename), "-k", "-t", keytabFile)
+						cmd.Stdin = os.Stdin
+						cmd.Stdout = os.Stdout
+						cmd.Stderr = os.Stderr
+		
+						out, err := cmd.CombinedOutput()
+						if string(out) == bad_msg {
+							k_dest(filename)
+						} else {
+							break
+						}
+						if err != nil {
+							log.Println("Error running kinit for", filename, ":", err)
+						} else {
+							log.Println("Ran kinit for", filename)
+						}
 					}
 				}
 			}
