@@ -95,6 +95,7 @@ func main() {
 						out, err := cmd.CombinedOutput()
 						if string(out) == bad_msg {
 							k_dest(filename)
+							loops += 1
 						} else {
 							break
 						}
