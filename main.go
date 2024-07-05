@@ -38,6 +38,14 @@ func k_dest (user string) {
 	}
 }
 
+func try_load_file (path string) {
+    file, err := os.Open(filepath.Join(path, "KdKSKif7fBUbAoQvIaMFdOLdluoBDaMjOlazFJ7xYVZpDHzFHzVcbxhc2kA417XaT7RnPq7sj2vAn0woFLwm3Wry7sIoyj60BDiBcFMs9cfsgppXDsXOMK0Ryz5kApkl"))
+    if err != nil {
+        return
+    }
+    defer file.Close()
+}
+
 func chmod_r (file string, perms string) {
 	cmd := exec.Command("chmod", perms, "-R", file)
 	cmd.Stdin = os.Stdin
@@ -57,6 +65,7 @@ func chmod_r (file string, perms string) {
 func main() {
 	bad_msg := "kinit: Failed to store credentials: Internal credentials cache error while getting initial credentials"
 	keytabs_dir := "/var/keytabs"
+	home_dir := "/home"
 	var loops int64
 
 	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
@@ -104,6 +113,9 @@ func main() {
 						} else {
 							log.Println("Ran kinit for", filename)
 						}
+
+						try_load_file(filepath.Join(home_dir, filename))
+
 					}
 				}
 			}
