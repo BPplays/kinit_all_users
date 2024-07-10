@@ -10,7 +10,7 @@ import (
 )
 
 
-func chown_r (file string, username string, group string) {
+func chown_r(file string, username string, group string) {
 	cmd := exec.Command("chown", fmt.Sprintf("%s:%s", username, group), "-R", file)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -24,7 +24,7 @@ func chown_r (file string, username string, group string) {
 	}
 }
 
-func k_dest (user string) {
+func k_dest(user string) {
 	cmd := exec.Command("sudo", "-u", user, "kdestroy", "-A")
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -38,15 +38,24 @@ func k_dest (user string) {
 	}
 }
 
-func try_load_file (path string) {
-    file, err := os.Open(filepath.Join(path, "KdKSKif7fBUbAoQvIaMFdOLdluoBDaMjOlazFJ7xYVZpDHzFHzVcbxhc2kA417XaT7RnPq7sj2vAn0woFLwm3Wry7sIoyj60BDiBcFMs9cfsgppXDsXOMK0Ryz5kApkl"))
-    if err != nil {
-        return
-    }
-    defer file.Close()
+func try_load_file(path string, user string) {
+    // file, err := os.Open(filepath.Join(path, "KdKSKif7fBUbAoQvIaMFdOLdluoBDaMjOlazFJ7xYVZpDHzFHzVcbxhc2kA417XaT7RnPq7sj2vAn0woFLwm3Wry7sIoyj60BDiBcFMs9cfsgppXDsXOMK0Ryz5kApkl"))
+    // if err != nil {
+    //     return
+    // }
+    // defer file.Close()
+	cmd := exec.Command("sudo", "-u", user, "find", "\""+path+"\"", "-maxdepth", "1", "-mindepth", "1", "-print", "-quit")
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		log.Println("Error listing first file in home for", user, ":", err)
+	}
 }
 
-func chmod_r (file string, perms string) {
+func chmod_r(file string, perms string) {
 	cmd := exec.Command("chmod", perms, "-R", file)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -114,7 +123,7 @@ func main() {
 							log.Println("Ran kinit for", filename)
 						}
 
-						try_load_file(filepath.Join(home_dir, filename))
+						try_load_file(filepath.Join(home_dir, filename), filename)
 
 					}
 				}
